@@ -1,4 +1,5 @@
 import math
+import sys
 
 
 class Token:
@@ -12,11 +13,13 @@ class Tokenizer:
 
     def __init__(self, origin):
         origin = origin.replace(" ", "")
+        origin = origin.replace("'", "")
         self.origin = origin
         self.position = 0
 
     def selectNext(self):
         current = self.origin[self.position]
+        #print(current)
         if current == "+":
             self.actual = Token("PLUS", "+")
             self.position += 1
@@ -24,7 +27,7 @@ class Tokenizer:
         elif current == "-":
             self.actual = Token("MINUS", "-")
             self.position += 1
-
+        
         elif current.isnumeric():
             counter = 1
             list_nums = [current]
@@ -103,7 +106,10 @@ class Parser:
 
 
 parser = Parser()
-list_test = ["1+2", "3-2", "1+2-3", "11+22-33", "789     +345   -    123"]
-for i in list_test:
-    parser.run(i)
-    print("-------")
+#list_test = ["1+2", "3-2", "1+2-3", "11+22-33", "789     +345   -    123"]
+code = ""
+for i in range(1,len(sys.argv)):
+    code += sys.argv[i]
+#print(code)
+parser.run(code)
+
