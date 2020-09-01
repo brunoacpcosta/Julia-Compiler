@@ -7,6 +7,7 @@ class Tokenizer:
         origin = origin.replace("'", "")
         self.origin = origin
         self.position = 0
+        self.actual = None
 
     def selectNext(self):
         if self.position < len(self.origin):
@@ -18,6 +19,14 @@ class Tokenizer:
 
             elif current == "-":
                 self.actual = tk.Token("MINUS", "-")
+                self.position += 1
+            
+            elif current == "*":
+                self.actual = tk.Token("TIMES", "*")
+                self.position += 1
+
+            elif current == "/":
+                self.actual = tk.Token("DIVIDED", "/")
                 self.position += 1
             
             elif current.isnumeric():
