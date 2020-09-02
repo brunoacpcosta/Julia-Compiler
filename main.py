@@ -7,5 +7,6 @@ code = ""
 for i in range(1,len(sys.argv)):
     code += sys.argv[i]
 #print(code)
-prs.Parser.run(code)
+result = prs.Parser.run(code)
+print(result)
 

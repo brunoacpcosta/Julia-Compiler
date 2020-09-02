@@ -69,4 +69,4 @@ class Parser:
         Parser.tokens= tkr.Tokenizer(code)
         result = Parser.parseExpression()
         #print("=")
-        print(result)
+        return result
