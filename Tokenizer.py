@@ -11,10 +11,11 @@ class Tokenizer:
         if self.position < len(self.origin):
             current = self.origin[self.position]
             if current == " ":
-                counter = self.position + 1
-                while self.origin[counter] == " ":
-                    counter += 1
-                self.position += (counter - 1)
+                while self.origin[self.position] == " ":
+                    self.position += 1
+                    if self.position == len(self.origin):
+                        self.actual = tk.Token("EOF", "")
+                        return
                 current = self.origin[self.position]
             #print(current)
             if current == "+":
