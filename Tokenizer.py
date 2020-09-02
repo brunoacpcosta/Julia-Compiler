@@ -12,12 +12,10 @@ class Tokenizer:
             current = self.origin[self.position]
             if current == " ":
                 counter = self.position + 1
-                print("Oba")
                 while self.origin[counter] == " ":
                     counter += 1
                 self.position += (counter - 1)
                 current = self.origin[self.position]
-                print("Aqui esta o atual:{}".format(current))
             #print(current)
             if current == "+":
                 self.actual = tk.Token("PLUS", "+")
