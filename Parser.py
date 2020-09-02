@@ -68,5 +68,7 @@ class Parser:
     def run(code):
         Parser.tokens= tkr.Tokenizer(code)
         result = Parser.parseExpression()
-        #print("=")
-        return result
+        if Parser.tokens.actual.type == "EOF":
+            return result
+        else:
+            raise Exception("Tokenizer nao chegou no EOF")
