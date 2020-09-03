@@ -55,7 +55,7 @@ class Tokenizer:
                 self.actual = tk.Token("INT", final)
                 self.position += counter
             else:
-                raise Exception("Token nao eh nem soma/subtracao, nem numero")
+                raise Exception("Token invalido")
         else:
             self.actual = tk.Token("EOF", "")
 
