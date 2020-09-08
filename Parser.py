@@ -28,7 +28,7 @@ class Parser:
         Parser.tokens.selectNext()
         current = Parser.tokens.actual
         #print(current.value)
-        print(current.type)
+        #print(current.type)
         if current.type == "INT":
             result = current.value
             Parser.tokens.selectNext()
@@ -51,7 +51,7 @@ class Parser:
                     current = Parser.tokens.actual
                     #print(current.value)
                     if current.type == "INT":
-                        result = result/current.value
+                        result = int(result/current.value)
 
                     else:
                         raise Exception("Divisao sem Numero depois")
