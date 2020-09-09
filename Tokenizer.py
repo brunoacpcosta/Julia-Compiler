@@ -34,6 +34,13 @@ class Tokenizer:
                 self.actual = tk.Token("DIVIDED", "/")
                 self.position += 1
             
+            elif current == "(":
+                self.actual = tk.Token("OPEN", "(")
+                self.position += 1
+            elif current == ")":
+                self.actual = tk.Token("CLOSE", ")")
+                self.position += 1
+            
             elif current.isnumeric():
                 counter = 1
                 list_nums = [current]
