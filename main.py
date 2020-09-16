@@ -5,6 +5,7 @@ import PrePro as pp
 
 code = sys.argv[1]
 filtered = pp.PrePro.filter(code)
-result = prs.Parser.run(filtered)
-print(result)
+node = prs.Parser.run(filtered)
+final = node.Evaluate()
+print(final)
 
