@@ -88,42 +88,49 @@ class Parser:
     @staticmethod
     def parseCommand():
         current = Parser.tokens.actual
-        if (current.type == "VARIABLE"):
+        if current.type == "VARIABLE":
             var = n.Identifier(current.value)
             Parser.tokens.selectNext()
             current = Parser.tokens.actual
-            if (current.type == "ASSIGNMENT"):
+            if current.type == "ASSIGNMENT":
                 Parser.tokens.selectNext()
                 current = Parser.tokens.actual
                 exp = Parser.parseExpression()
                 node = n.Assignment("ASSIGNMENT", [var, exp])
                 current = Parser.tokens.actual
-                if (current.type == "ENDLINE" or current.type == "EOF"):
+                if current.type == "ENDLINE":
                     Parser.tokens.selectNext()
                     current = Parser.tokens.actual
                     return node
+
+                elif current.type == "EOF":
+                    return node
+
                 else:
                    raise Exception("Queria ENDLINE, recebeu {}".format(current.type))
             else:
                 raise Exception("Queria ASSIGNMENT, recebeu {}".format(current.type))
 
-        elif (current.type == "RESERVED"):
-            if (current.value == "println"):
+        elif current.type == "RESERVED":
+            if current.value == "println":
                 Parser.tokens.selectNext()
                 current = Parser.tokens.actual
-                if (current.type == "OPEN"):
+                if current.type == "OPEN":
                     Parser.tokens.selectNext()
                     exp = Parser.parseExpression()
-                    
                     node = n.Println("PRINT", [exp])
                     current = Parser.tokens.actual
-                    if (current.type == "CLOSE"):
+                    if current.type == "CLOSE":
                         Parser.tokens.selectNext()
                         current = Parser.tokens.actual
-                        if (current.type == "ENDLINE" or current.type == "EOF"):
+                        if current.type == "ENDLINE":
                             Parser.tokens.selectNext()
                             current = Parser.tokens.actual
                             return node
+
+                        elif(current.type == "EOF"):
+                            return node
+
                         else:
                             raise Exception("Queria ENDLINE, recebeu {}".format(current.type))
                     else:
@@ -134,7 +141,7 @@ class Parser:
             else:
                 raise Exception("Queria println, recebeu {}".format(current.value))
 
-        elif (current.type == "ENDLINE" or current.type == "EOF"):
+        elif (current.type == "ENDLINE"):
             Parser.tokens.selectNext()
             return n.NoOp()
 
@@ -159,7 +166,6 @@ class Parser:
         if Parser.tokens.actual.type == "EOF":
             return node
         else:
-            #print(Parser.tokens.actual.type)
             raise Exception("Tokenizer nao chegou no EOF")
 
 

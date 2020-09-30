@@ -58,7 +58,7 @@ class IntVal(Node):
 class NoOp(Node):
 
     def Evaluate(self, symbolTable):
-        print("NoOp Evaluate")
+        pass
 
 class Println(Node):
     def __init__(self, value, children):

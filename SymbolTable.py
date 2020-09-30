@@ -3,7 +3,7 @@ class SymbolTable:
         self.table = {}
 
     def getVar(self, name):
-        if (name not in self.table):
+        if name not in self.table:
             raise Exception("Variable {} not declared.".format(name))
         return self.table[name]
 
