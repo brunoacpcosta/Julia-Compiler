@@ -71,11 +71,11 @@ class Tokenizer:
                 self.actual = tk.Token("INT", final)
                 self.position += counter
 
-            elif (current.isalnum() and not current.isdigit()):
+            elif current.isalnum() and not current.isdigit():
                 counter = 1
                 command = "" + current
-                if self.position < len(self.origin)-1:
-                    nextLet = self.origin[self.position+1]
+                if self.position < len(self.origin) - 1:
+                    nextLet = self.origin[self.position + 1]
                     while (nextLet.isalnum() or nextLet == "_" or nextLet.isdigit()):
                         command += nextLet
                         counter += 1
@@ -83,12 +83,10 @@ class Tokenizer:
                             nextLet = self.origin[self.position+counter]
                         else:
                             break
-                if (command in self.reserved):
+                if command in self.reserved:
                     self.actual = tk.Token("RESERVED", command)
-                    # print(command)
                 else:
                     self.actual = tk.Token("VARIABLE", command)
-                    # print(command)
                 self.position += counter
 
             else:
