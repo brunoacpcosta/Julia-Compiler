@@ -1,12 +1,14 @@
 import Token as tk
 
+
 class Tokenizer:
 
     def __init__(self, origin):
         self.origin = origin
         self.position = 0
         self.actual = None
-        self.reserved = ["println"]
+        self.reserved = ["println", "if", "else",
+                         "while", "elseif", "end", "readline"]
 
     def selectNext(self):
         if self.position < len(self.origin):
@@ -18,7 +20,7 @@ class Tokenizer:
                         self.actual = tk.Token("EOF", "")
                         return
                 current = self.origin[self.position]
-            #print(current)
+
             if current == "+":
                 self.actual = tk.Token("PLUS", "+")
                 self.position += 1
@@ -26,7 +28,7 @@ class Tokenizer:
             elif current == "-":
                 self.actual = tk.Token("MINUS", "-")
                 self.position += 1
-            
+
             elif current == "*":
                 self.actual = tk.Token("TIMES", "*")
                 self.position += 1
@@ -34,18 +36,50 @@ class Tokenizer:
             elif current == "/":
                 self.actual = tk.Token("DIVIDED", "/")
                 self.position += 1
-            
+
             elif current == "(":
                 self.actual = tk.Token("OPEN", "(")
                 self.position += 1
+
             elif current == ")":
                 self.actual = tk.Token("CLOSE", ")")
                 self.position += 1
-            
-            elif (current == "="):
-                # print("igual")
-                self.actual = tk.Token("ASSIGNMENT", "=")
+
+            elif current == ">":
+                self.actual = tk.Token("GREATER", ">")
                 self.position += 1
+
+            elif current == "<":
+                self.actual = tk.Token("LESS", "<")
+                self.position += 1
+
+            elif current == "!":
+                self.actual = tk.Token("NOT", "!")
+                self.position += 1
+
+            elif current == "=":
+                if self.origin[self.position+1] == "=":
+                    self.actual = tk.Token("EQUALS", "==")
+                    self.position += 2
+                else:
+                    self.actual = tk.Token("ASSIGNMENT", "=")
+                    self.position += 1
+
+            elif current == "|":
+                if self.origin[self.position+1] == "|":
+                    self.actual = tk.Token("OR", "||")
+                    self.position += 2
+                else:
+                    raise Exception("Queria OR, recebeu {}".format(
+                        self.origin[self.position+1]))
+
+            elif current == "&":
+                if self.origin[self.position+1] == "&":
+                    self.actual = tk.Token("AND", "&&")
+                    self.position += 2
+                else:
+                    raise Exception("Queria AND, recebeu {}".format(
+                        self.origin[self.position+1]))
 
             elif (current == "\n"):
                 self.actual = tk.Token("ENDLINE", "\n")
@@ -90,8 +124,8 @@ class Tokenizer:
                 self.position += counter
 
             else:
-                raise Exception("Token invalido")
+                raise Exception("Queria TOKEN, recebeu {}".format(current))
         else:
             self.actual = tk.Token("EOF", "")
 
-
+        # print("Type: {}     Value: {}".format(self.actual.type, self.actual.value))
