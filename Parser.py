@@ -102,6 +102,17 @@ class Parser:
             node = n.IntVal(current.value)
             Parser.tokens.selectNext()
 
+        elif current.type == "BOOL":
+            if current.value == "true":
+                node = n.BoolVal(True)
+            else:
+                node = n.BoolVal(False)
+            Parser.tokens.selectNext()
+
+        elif current.type == "STRING":
+            node = n.StringVal(current.value)
+            Parser.tokens.selectNext()
+
         elif current.type == "OPEN":
             Parser.tokens.selectNext()
             node = Parser.parseRelExpression()
@@ -150,7 +161,6 @@ class Parser:
                             nRead = n.ReadLine()
                             node = n.Assignment("ASSIGNMENT", [var, nRead])
                             current = Parser.tokens.actual
-
 
                         else:
                             raise Exception(
@@ -325,6 +335,26 @@ class Parser:
                 else:
                     raise Exception(
                         "Queria ENDLINE, recebeu {}".format(current.value))
+                
+            elif current.value == "local":
+                Parser.tokens.selectNext()
+                current = Parser.tokens.actual
+                if current.type == "VARIABLE":
+                    var = n.Identifier(current.value)
+                    Parser.tokens.selectNext()
+                    current = Parser.tokens.actual
+                    if current.type == "DECLARE":
+                        Parser.tokens.selectNext()
+                        current = Parser.tokens.actual
+                        if current.type == "TYPE":
+                            varType = n.Type(current.value)
+                            node = n.DeclareVar("DECVAR", [var, varType])
+                            Parser.tokens.selectNext()
+                            current = Parser.tokens.actual
+                            if current.type == "ENDLINE":
+                                Parser.tokens.selectNext()
+                                return node
+
 
         elif (current.type == "ENDLINE"):
             Parser.tokens.selectNext()
@@ -343,6 +373,7 @@ class Parser:
             command = Parser.parseCommand()
             statements.children.append(command)
             current = Parser.tokens.actual
+            # print(current.type)
         return statements
 
     @staticmethod
