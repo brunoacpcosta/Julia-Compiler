@@ -8,4 +8,18 @@ class SymbolTable:
         return self.table[name]
 
     def setVar(self, name, value):
-        self.table[name] = value
+        if name not in self.table:
+            raise Exception("Variable {} not declared.".format(name))
+
+        variable = self.getVar(name)
+        if (variable[1] == value[1]):
+            self.table[name][0] = value[0]
+            # print(variable[0], value[0])
+        else:
+            raise Exception("Invalid variable type: old {} with new {}".format(variable[1], value[1]))
+
+    def declareVar(self, name, type):
+        if (name in self.table):
+            raise Exception("{}, already declared".format(name))
+        # print(self.table)
+        self.table[name] = [None, type]

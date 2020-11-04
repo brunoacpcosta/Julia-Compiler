@@ -8,7 +8,8 @@ class Tokenizer:
         self.position = 0
         self.actual = None
         self.reserved = ["println", "if", "else",
-                         "while", "elseif", "end", "readline"]
+                         "while", "elseif", "end", "readline", "local", "true", "false", "global"]
+        self.types = ["Int", "Bool", "String"]
 
     def selectNext(self):
         if self.position < len(self.origin):
@@ -57,6 +58,21 @@ class Tokenizer:
                 self.actual = tk.Token("NOT", "!")
                 self.position += 1
 
+            elif current == '"':
+                counter = 1
+                command = "" + current
+                if self.position < len(self.origin) - 1:
+                    nextLet = self.origin[self.position + 1]
+                    while nextLet != '"':
+                        command += nextLet
+                        counter += 1
+                        if self.position+counter < len(self.origin):
+                            nextLet = self.origin[self.position+counter]
+                        else:
+                            raise Exception("String not closed")
+                    self.actual = tk.Token("STRING", command[1:])
+                    self.position += (counter + 1)
+
             elif current == "=":
                 if self.origin[self.position+1] == "=":
                     self.actual = tk.Token("EQUALS", "==")
@@ -70,7 +86,15 @@ class Tokenizer:
                     self.actual = tk.Token("OR", "||")
                     self.position += 2
                 else:
-                    raise Exception("Queria OR, recebeu {}".format(
+                    raise Exception("Queria OR, recebeu {}".format("|" +
+                        self.origin[self.position+1]))
+
+            elif current == ":":
+                if self.origin[self.position+1] == ":":
+                    self.actual = tk.Token("DECLARE", "::")
+                    self.position += 2
+                else:
+                    raise Exception("Queria DECLARE, recebeu {}".format(":" +
                         self.origin[self.position+1]))
 
             elif current == "&":
@@ -78,7 +102,7 @@ class Tokenizer:
                     self.actual = tk.Token("AND", "&&")
                     self.position += 2
                 else:
-                    raise Exception("Queria AND, recebeu {}".format(
+                    raise Exception("Queria AND, recebeu {}".format("&" +
                         self.origin[self.position+1]))
 
             elif (current == "\n"):
@@ -117,8 +141,14 @@ class Tokenizer:
                             nextLet = self.origin[self.position+counter]
                         else:
                             break
-                if command in self.reserved:
-                    self.actual = tk.Token("RESERVED", command)
+                if command in self.types:
+                    self.actual = tk.Token("TYPE", command)
+
+                elif command in self.reserved:
+                    if (command == "true" or command == "false"):
+                        self.actual = tk.Token("BOOL", command)
+                    else:
+                        self.actual = tk.Token("RESERVED", command)
                 else:
                     self.actual = tk.Token("VARIABLE", command)
                 self.position += counter
