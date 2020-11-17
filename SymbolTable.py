@@ -1,6 +1,7 @@
 class SymbolTable:
     def __init__(self):
         self.table = {}
+        self.ebp = 1
 
     def getVar(self, name):
         if name not in self.table:
@@ -22,4 +23,5 @@ class SymbolTable:
         if (name in self.table):
             raise Exception("{}, already declared".format(name))
         # print(self.table)
-        self.table[name] = [None, type]
+        self.table[name] = [None, type, self.ebp]
+        self.ebp += 1
