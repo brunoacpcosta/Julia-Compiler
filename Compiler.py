@@ -87,10 +87,8 @@ class Compiler():
     def flush():
         Compiler.assembly.append("POP EBP \n")
         Compiler.assembly.append("MOV EAX, 1 \n")
-        Compiler.assembly.append("INT 0x80 \n")
-        final = ""
-        for i in Compiler.assembly:
-            final += i
+        Compiler.assembly.append("INT 0x80")
+        final = "".join(Compiler.assembly)
         print(final)
         with open("compiler.asm", "w") as codeFile:             
             codeFile.write(final)
