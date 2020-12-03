@@ -117,11 +117,13 @@ class UnOp(Node):
             if c[1] == "Bool":
                 c = (int(c[0]), c[1])
             result = (-1 * c[0], "Int")
+            compiler.add("NEG EBX \n")
 
         elif self.value == "NOT":
             if c[1] == "Int":
                 c = (c[0] != 0, c[1])
             result = (bool(not c[0]), "Bool")
+            compiler.add("NOT EBX \n")
 
         return result
 
@@ -172,7 +174,8 @@ class Println(Node):
         self.i = Node.newId()
 
     def Evaluate(self, symbolTable, compiler):
-        self.children[0].Evaluate(symbolTable, compiler)
+        print(self.children[0].Evaluate(symbolTable, compiler)[0])
+        # self.children[0].Evaluate(symbolTable, compiler)
         compiler.add("PUSH EBX \n")
         compiler.add("CALL print \n")
         compiler.add("POP EBX \n")
@@ -253,9 +256,11 @@ class If(Node):
         compiler.add("CMP EBX, False \n")
         compiler.add("JE EXIT_{} \n".format(self.i))
         self.children[1].Evaluate(symbolTable, compiler)
-        compiler.add("EXIT_{} \n".format(self.i))
+        compiler.add("JMP ENDIF_{} \n".format(self.i))
+        compiler.add("EXIT_{}: \n".format(self.i))
         if len(self.children) == 3:
             self.children[2].Evaluate(symbolTable, compiler)
+        compiler.add("ENDIF_{}: \n".format(self.i))
 
 
 class DeclareVar(Node):
