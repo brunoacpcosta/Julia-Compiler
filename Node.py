@@ -1,3 +1,5 @@
+import SymbolTable as st
+
 class Node:
 
     def __init__(self):
@@ -144,7 +146,10 @@ class Statements(Node):
 
     def Evaluate(self, symbolTable):
         for child in self.children:
-            child.Evaluate(symbolTable)
+            if symbolTable.getVar("return") is None:
+                child.Evaluate(symbolTable)
+            else:
+                break
 
 
 class Identifier(Node):
@@ -184,8 +189,11 @@ class While(Node):
         self.children = children
 
     def Evaluate(self, symbolTable):
-        while self.children[0].Evaluate(symbolTable)[0] == True:
-            self.children[1].Evaluate(symbolTable)
+        while (self.children[0].Evaluate(symbolTable)[0] == True or self.children[0].Evaluate(symbolTable)[0] != 0):
+            if self.children[0].Evaluate(symbolTable)[1] == "String":
+                raise Exception("Invalid String Operation")
+            else:
+                self.children[1].Evaluate(symbolTable)
 
 
 class If(Node):
@@ -194,7 +202,10 @@ class If(Node):
         self.children = children
 
     def Evaluate(self, symbolTable):
-        if self.children[0].Evaluate(symbolTable)[0] == True:
+        c0 = self.children[0].Evaluate(symbolTable)
+        if c0[1] == "String":
+            raise Exception("Invalid String Operation")
+        if (c0[0] == True or c0[0] != 0):
             self.children[1].Evaluate(symbolTable)
 
         else:
@@ -218,3 +229,48 @@ class Type(Node):
 
     def Evaluate(self, symbolTable):
         return self.value
+
+class FuncDec(Node):
+    def __init__(self, value):
+        self.value = value
+        self.children = []
+        self.type = None
+
+    def Evaluate(self, symbolTable):
+        symbolTable.declareFunc(self.value, self.type, self)
+
+class FuncCall(Node):
+    def __init__(self, value):
+        self.value = value
+        self.children = []
+
+    def Evaluate(self, symbolTable):
+        funcRef, funcType = symbolTable.getFunc(self.value)
+        newST = st.SymbolTable()
+        if len(self.children) != (len(funcRef.children) - 1):
+            raise Exception("Numbers of arguments don't match old {} with new {}".format(len(self.children), len(funcRef.children) - 1))
+        for i in range(0, len(funcRef.children)-1):
+            value = self.children[i].Evaluate(symbolTable)
+            argVal, argType = funcRef.children[i]
+            if value[1] != argType:
+                raise Exception("Invalid argument type: old {} with new {}".format(argType, value[1]))
+            newST.declareVar(argVal, argType)
+            newST.setVar(argVal, value)
+
+        funcRef.children[-1].Evaluate(newST)
+        returnVal = newST.getVar("return")
+        if returnVal != None:
+            if funcType == returnVal[1]:
+                return returnVal
+            else:
+                raise Exception("Invalid function return type: old {} with new {}".format(funcType, returnVal[1]))
+
+
+class Return(Node):
+    def __init__(self):
+        self.value = "RETURN"
+        self.children = []
+
+    def Evaluate(self, symbolTable):
+        if len(self.children) == 1:
+            symbolTable.setVar("return", self.children[0].Evaluate(symbolTable))

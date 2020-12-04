@@ -8,7 +8,7 @@ class Tokenizer:
         self.position = 0
         self.actual = None
         self.reserved = ["println", "if", "else",
-                         "while", "elseif", "end", "readline", "local", "true", "false", "global"]
+                         "while", "elseif", "end", "readline", "local", "true", "false", "global", "return", "function"]
         self.types = ["Int", "Bool", "String"]
 
     def selectNext(self):
@@ -56,6 +56,10 @@ class Tokenizer:
 
             elif current == "!":
                 self.actual = tk.Token("NOT", "!")
+                self.position += 1
+
+            elif current == ",":
+                self.actual = tk.Token("COMMA", ",")
                 self.position += 1
 
             elif current == '"':
