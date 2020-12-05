@@ -476,20 +476,21 @@ class Parser:
                                                     Parser.tokens.selectNext()
                                                     current = Parser.tokens.actual
                                                 else:
-                                                    raise ValueError(
-                                                        'FUNCTION SET_TYPE needs TYPE after')
+                                                    raise Exception(
+                                                        "Queria TYPE, recebeu {}".format(current.value))
                                             else:
-                                                raise ValueError(
-                                                    'FUNCTION IDENTIFIER needs SET_TYPE after')
+                                                raise Exception(
+                                                    "Queria DECLARE, recebeu {}".format(current.value))
                                         else:
-                                            raise ValueError(
-                                                'FUNCTION needs IDENTIFIER after COMMA')
+                                            raise Exception(
+                                                "Queria VARIABLE, recebeu {}".format(current.value))
                                 else:
-                                    raise ValueError(
-                                        'FUNCTION SET_TYPE needs TYPE after')
+                                    raise Exception(
+                                        "Queria TYPE, recebeu {}".format(current.value))
                             else:
-                                raise ValueError(
-                                    'FUNCTION IDENTIFIER needs SET_TYPE after')
+                                raise Exception(
+                                    "Queria DECLARE, recebeu {}".format(current.value))
+
                         if(current.type == "CLOSE"):
                             Parser.tokens.selectNext()
                             current = Parser.tokens.actual
@@ -511,33 +512,33 @@ class Parser:
                                             if(current.type == "ENDLINE"):
                                                 Parser.tokens.selectNext()
                                             else:
-                                                raise ValueError(
-                                                    'END needs END_LINE after')
+                                                raise Exception(
+                                                    "Queria ENDLINE, recebeu {}".format(current.value))
                                         else:
-                                            raise ValueError(
-                                                'FUNCTION needs END')
+                                            raise Exception(
+                                                "Queria END, recebeu {}".format(current.value))
                                     else:
-                                        raise ValueError(
-                                            'FUNCTION needs END_LINE after TYPE')
+                                        raise Exception(
+                                            "Queria ENDLINE, recebeu {}".format(current.value))
                                 else:
-                                    raise ValueError(
-                                        'FUNCTION SET_TYPE needs TYPE after')
+                                    raise Exception(
+                                        "Queria TYPE, recebeu {}".format(current.value))
                             else:
-                                raise ValueError(
-                                    'FUNCTION CLOSE_P needs SET_TYPE after')
+                                raise Exception(
+                                    "Queria DECLARE, recebeu {}".format(current.value))
                         else:
-                            raise ValueError(
-                                'FUNCTION OPEN_P needs matching CLOSE_P')
+                            raise Exception(
+                                "Queria CLOSE, recebeu {}".format(current.value))
                     else:
-                        raise ValueError(
-                            'FUNCTION IDENTIFIER needs OPEN_P after')
+                        raise Exception(
+                            "Queria OPEN, recebeu {}".format(current.value))
                 else:
-                    raise ValueError('FUNCTION needs IDENTIFIER after')
+                    raise Exception(
+                        "Queria VARIABLE, recebeu {}".format(current.value))
             else:
                 statements.children.append(Parser.parseCommand())
                 current = Parser.tokens.actual
         return statements
-
 
     @staticmethod
     def run(code):

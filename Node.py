@@ -230,6 +230,7 @@ class Type(Node):
     def Evaluate(self, symbolTable):
         return self.value
 
+
 class FuncDec(Node):
     def __init__(self, value):
         self.value = value
@@ -238,6 +239,7 @@ class FuncDec(Node):
 
     def Evaluate(self, symbolTable):
         symbolTable.declareFunc(self.value, self.type, self)
+
 
 class FuncCall(Node):
     def __init__(self, value):
