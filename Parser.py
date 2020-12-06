@@ -409,6 +409,9 @@ class Parser:
                 else:
                     raise Exception(
                         "Queria ENDLINE, recebeu {}".format(current.value))
+            
+            else:
+                raise Exception("RESERVED inválido, recebeu {}".format(current.value))
 
         elif (current.type == "ENDLINE"):
             Parser.tokens.selectNext()
